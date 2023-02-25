@@ -1,0 +1,44 @@
+{
+  "name": "luxonis-test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/server.js",
+  "author": "Jaroslav Pšenička",
+  "license": "ISC",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch & NODE_ENV=development nodemon dist",
+    "test": "tsc && mocha dist/**/*.spec.js --exit",
+    "lint": "tslint -c tslint.json 'src/**/**.ts'"
+  },
+  "dependencies": {
+    "@mikro-orm/core": "^5.6.11",
+    "@mikro-orm/postgresql": "^5.6.11",
+    "compression": "^1.7.4",
+    "cors": "^2.8.4",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "express-aggressive-cache": "^2.1.6",
+    "winston": "^3.8.2",
+    "winston-transport": "^4.5.0"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.3.4",
+    "@types/chai-http": "^4.2.0",
+    "@types/compression": "^1.7.2",
+    "@types/cors": "^2.8.4",
+    "@types/dotenv": "^4.0.3",
+    "@types/express": "^4.17.17",
+    "@types/mocha": "^10.0.1",
+    "@types/node": "^18.14.1",
+    "@types/sinon": "^10.0.13",
+    "chai": "^4.3.7",
+    "chai-http": "^4.3.0",
+    "concurrently": "^7.6.0",
+    "mocha": "^10.2.0",
+    "nodemon": "^2.0.20",
+    "sinon": "^15.0.1",
+    "tslint": "^5.11.0",
+    "typescript": "^4.9.5"
+  }
+}
