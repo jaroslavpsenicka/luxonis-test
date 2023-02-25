@@ -24,8 +24,6 @@ services:
     container_name: luxonis-test-app
     image: luxonis-test-app
     restart: unless-stopped
-    volumes:
-      - ./logs:/logs
     ports:
       - 3000:3000
     environment:

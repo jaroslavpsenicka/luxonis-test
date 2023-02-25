@@ -22,11 +22,12 @@ export const DI = {} as {
     
 const app = express();
 
+app.use(express.static(path.join(__dirname, './web')));
+
 app.use(compression());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cache({ maxAge: 3600 }).middleware);
-app.use(express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 }));
 app.use((req, res, next) => RequestContext.create(DI.orm.em, next));
 
 app.use(routes);
