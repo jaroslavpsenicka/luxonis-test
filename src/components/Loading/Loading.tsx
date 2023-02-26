@@ -14,7 +14,7 @@ interface LoadingType {
 
 export function Loading({text}: LoadingType) {
   return (
-    <div className="mt-4 mb-3 text-center text-secondary">
+    <div className="mt-5 mb-3 text-center text-secondary">
       <StyledLoadingImage icon={faSpinner} className="fa-pulse mb-3 d-block" />
       { text ? text : 'Loading...'}
     </div>

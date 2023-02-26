@@ -13,7 +13,7 @@ export const isScraping = () => scrapingInProgress
  * @param recordCount Number of records to be scraped
  * @param progressFn Callback function to inform the caller
  */
-export const start = (recordCount: number, delay: number, progressFn: (currentCycle: number, cycleCount: number) => boolean) => {
+export const start = (recordCount: number, delay: number, progressFn: (currentCycle: number, cycleCount: number) => void) => {
   assert(recordCount > 0 && recordCount <= 1000, "u crazy?");
   assert(delay > 0, "be gentle to the service");
   assert(scrapingInProgress === false, "scraping is already running, wait until completed or call stop()");
@@ -25,8 +25,8 @@ export const start = (recordCount: number, delay: number, progressFn: (currentCy
   const doScrape = () => {
     if (!scrapingInProgress) return;
 
-    const cont = progressFn(currentCycle++, cycleCount);
-    if (cont && currentCycle < cycleCount) {
+    progressFn(currentCycle++, cycleCount);
+    if (currentCycle < cycleCount) {
       setTimeout(doScrape, delay);
     } else {
       scrapingInProgress = false;
@@ -40,6 +40,7 @@ export const start = (recordCount: number, delay: number, progressFn: (currentCy
  * Stops the scraping process.
  */ 
 export const stop = () => {
+  assert(scrapingInProgress === true, "scraping is not running");
   scrapingInProgress = false
 }
 

@@ -2,6 +2,7 @@ import express, { Express, Request, Response, NextFunction } from 'express';
 import dotenv from 'dotenv';
 import bodyParser from 'body-parser';
 import compression from 'compression';
+import cors from 'cors';
 import path from 'path';
 import http from 'http';
 import { EntityManager, EntityRepository, MikroORM, RequestContext } from '@mikro-orm/core';
@@ -24,7 +25,7 @@ const app = express();
 
 app.use(express.static(path.join(__dirname, './web')));
 
-app.use(compression());
+app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cache({ maxAge: 3600 }).middleware);

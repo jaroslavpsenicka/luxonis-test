@@ -5,44 +5,71 @@ import { Estate, Loadable } from '../types'
 
 interface DataContextType {
   estates: Loadable<Estate>
-  scrapingInProgress: boolean
-  reloadEstates: () => Promise<void>
-  cancelReload: () => Promise<void>
+  scraping: ScrapingType
+  startScraping: () => Promise<void>
+  stopScraping: () => Promise<void>
+}
+
+interface ScrapingType {
+  running: boolean
+  progress?: number
+  error?: Error
 }
 
 const loadableEstates: Loadable<Estate> = { loading: true }
 const initialContext: DataContextType = {
   estates: loadableEstates,
-  scrapingInProgress: false,
-  reloadEstates: () => Promise.resolve(),
-  cancelReload: () => Promise.resolve()
+  scraping: { running: false },
+  startScraping: () => Promise.resolve(),
+  stopScraping: () => Promise.resolve()
 }
 const DataContext = createContext<DataContextType>(initialContext);
 const SERVICE_URL = process.env.REACT_APP_SERVICE_URL;
 
+let eventSource = undefined;
+
 function DataProvider({ children }: any) {
 
   const [ estates, setEstates ] = useState<Loadable<Estate>>({ loading: true })
-  const [ scrapingInProgress, setScrapingInProgress ] = useState<boolean>(false)
+  const [ scraping, setScraping ] = useState<ScrapingType>({ running: false })
+
+  useEffect(() => loadEstates(), [])
 
   useEffect(() => {
+    if (scraping.running && scraping.progress >= 100) {
+      setScraping({ ...scraping, running: false });
+      loadEstates()
+    }
+  }, [scraping])
+
+  const loadEstates = () => {
     setEstates(() => ({ loading: true }))
     Axios.get(`${SERVICE_URL}/api/estates`)
       .then(response => setEstates({ loading: false, data: response.data }))
       .catch(err => setEstates({ loading: false, error: err }))
+  }
 
-  }, [])
+  const watchScraping = () => {
+    eventSource = new EventSource(`${SERVICE_URL}/api/scraping`);
+    eventSource.addEventListener('scraping-progress', (event) => setScraping({ running: parseInt(event.data) < 100, progress: parseInt(event.data)}));
+    eventSource.addEventListener('error', (err) => setScraping({ running: false, error: err }));
+  }
 
-  const reloadEstates = (): Promise<void> => Axios.post(`${SERVICE_URL}/api/scrape`)
-  const cancelReload = (): Promise<void> => Axios.delete(`${SERVICE_URL}/api/scrape`)
+  const startScraping = (): Promise<void> => Axios.post(`${SERVICE_URL}/api/scraping`)
+    .then(() => setScraping({ running: true }))
+    .then(() => watchScraping())
+    .catch(err => setScraping({ running: false, error: err }))
 
+  const stopScraping = (): Promise<void> => Axios.delete(`${SERVICE_URL}/api/scraping`)
+    .then(() => setScraping({ running: false }))
+    .then(() => { eventSource?.close(); eventSource = undefined; })
 
   return (
     <DataContext.Provider value={{
       estates,
-      scrapingInProgress,
-      reloadEstates,
-      cancelReload
+      scraping,
+      startScraping,
+      stopScraping
     }}>{children}</DataContext.Provider>
   );
 }

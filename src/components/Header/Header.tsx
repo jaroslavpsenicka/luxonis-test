@@ -21,20 +21,13 @@ export function Header() {
 
   return (
     <Navbar dark fixed="top" expand="xs" className="navbar-dark bg-primary">
-      <NavbarBrand className="ms-3 text-disabled" href="/">Luxonis TEST App</NavbarBrand>
-      <NavbarToggler onClick={toggle} />
-      <Collapse isOpen={isOpen} navbar>
-        <Nav className="mx-auto" navbar>
-          <NavItem>
-            <NavLink href="/" className="d-none d-sm-block">Estates</NavLink>
-          </NavItem>
-        </Nav>
-        <NavbarText>
-          <a href="https://github.com/jaroslavpsenicka/luxonis-test" target="_new">
-            <FontAwesomeIcon icon={faGithub} className="text-info me-3" size="2x" />
-          </a>
-        </NavbarText>
-      </Collapse>
+      <NavbarBrand className="ms-3 text-disabled" href="/">Luxonis TEST</NavbarBrand>
+      <Nav className="mx-auto" navbar />
+      <NavbarText className="py-0">
+        <a href="https://github.com/jaroslavpsenicka/luxonis-test" target="_new">
+          <FontAwesomeIcon icon={faGithub} className="text-info me-3" size="2x" />
+        </a>
+      </NavbarText>
     </Navbar>
   )
 
