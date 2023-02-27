@@ -50,7 +50,6 @@ export const start = (recordCount: number, delay: number, onChange: (currentCycl
  * Stops the scraping process.
  */ 
 export const stop = () => {
-  assert(scrapingInProgress === true, "scraping is not running");
   scrapingInProgress = false
 }
 

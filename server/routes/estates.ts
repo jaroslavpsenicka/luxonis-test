@@ -8,6 +8,8 @@ const DEFAULT_DELAY = 500
 const DEFAULT_OFFSET = 0
 const DEFAULT_LIMIT = 10
 
+let currentStatus = { running: false }
+
 const scrapingEvents: Array<number> = [];
 
 export const searchEstates: RequestHandler = (req, res) => {
@@ -20,10 +22,19 @@ export const searchEstates: RequestHandler = (req, res) => {
 export const startScraping: RequestHandler = (req, res) => {
   const countParam = parseInt(req.query.count as string)
   const delayParam = parseInt(req.query.delay as string)
-  const onChange = (currentCycle: number, cycleCount: number) => scrapingEvents.push(Math.floor((currentCycle+1)/cycleCount*100))
+  const onChange = (currentCycle: number, cycleCount: number) => {
+    const progress = Math.floor((currentCycle+1)/cycleCount*100)
+    currentStatus = { running: isScraping(), progress }
+    scrapingEvents.push(progress);
+  }
+
   start(countParam || DEFAULT_COUNT, delayParam || DEFAULT_DELAY, onChange, () => {});
   res.status(201).send();
 };
+
+export const getScraping: RequestHandler = (req, res) => {
+  return res.status(200).json(currentStatus);
+}
 
 export const getScrapingStream: RequestHandler = (req, res) => {
   res.writeHead(200, {

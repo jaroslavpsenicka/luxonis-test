@@ -13,7 +13,7 @@ class ConsoleLogTransport extends Transport {
 
   log(info: any, callback: { (): void }) {
     const severity = info.consoleLoggerOptions?.label! || (info.level as string).toUpperCase()
-    const finalMessage = `[${new Date().toISOString()}] [${severity}] ${info.message}`
+    const finalMessage = `${new Date().toISOString()} [${severity}] ${info.message}`
     console.log(levelStyleMap[info.level], finalMessage)
     callback()
   }

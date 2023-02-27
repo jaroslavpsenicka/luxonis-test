@@ -42,6 +42,7 @@ function DataProvider({ children }: any) {
 
   const estatePageSize = 20;
 
+  useEffect(() => loadScraping(), [])
   useEffect(() => loadEstates(), [estatePage])
 
   useEffect(() => {
@@ -51,6 +52,12 @@ function DataProvider({ children }: any) {
     }
   }, [scraping])
 
+  const loadScraping = () => {
+    Axios.get<ScrapingType>(`${SERVICE_URL}/api/scraping`)
+      .then(response => setScraping(response.data))
+      .catch(err => setScraping({ running: false, error: err }))
+  }
+
   const loadEstates = () => {
     setEstates(() => ({ loading: true }))
     Axios.get(`${SERVICE_URL}/api/estates`, { params: { offset: estatePage * estatePageSize, limit: estatePageSize }} )
@@ -59,7 +66,7 @@ function DataProvider({ children }: any) {
   }
 
   const watchScraping = () => {
-    eventSource = new EventSource(`${SERVICE_URL}/api/scraping`);
+    eventSource = new EventSource(`${SERVICE_URL}/api/scraping/events`);
     eventSource.addEventListener('scraping-progress', (event) => setScraping({ running: true, progress: parseInt(event.data)}));
     eventSource.addEventListener('error', (err) => setScraping({ running: false, error: err }));
   }

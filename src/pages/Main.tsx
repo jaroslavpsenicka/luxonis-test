@@ -17,6 +17,9 @@ const StyledLoadingImage = styled(FontAwesomeIcon)`
   height: 20px;
   margin: 12px auto;
 `
+const DesktopCard = styled(Card)`
+  width: 11rem;
+`
 
 export default function MainPage() {
 
@@ -39,12 +42,12 @@ export default function MainPage() {
   )
 
   const Estate = ({ name, image }: { name: string, image: string }) => (
-    <Card className="m-3" style={{ width: '10rem' }}>
+    <DesktopCard className="m-2">
       <img alt={name} src={image} />
       <CardBody>
-        <CardTitle tag="h5">{name}</CardTitle>
+        <div>{name}</div>
       </CardBody>
-    </Card>
+    </DesktopCard>
   )
 
   const NoEstates = () => (
