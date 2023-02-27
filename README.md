@@ -1,14 +1,60 @@
 This is Luxonis TEST project.
 
-## API
-There are following endpoints exposed:
+## Service implementation
+Implemented as standard Express application.
+There are following endpoints exposed. All endpoints uses standard HTTP statuses.
 
-### 
+### GET /api/estates
+Provides estates data.
+Parameters:
+```
+- offset: start index of requested dataset
+- limit: number of records to be returned
+```
+Returns a structure of following fields
+```
+- count: total count of records (number)
+- offset: start index of returned dataset (number)
+- limit: number of records of returned dataset (number)
+- entities: a data of following structure:
+  - name: estate name (string)
+  - image: estate image (string)
+```
+
+### GET /api/scraping
+Provides scraping status.
+
+Returns a structure of following fields
+```
+- running: a flag indicating running scraping process (true/false)
+- progress: percentage of scraped data (number 0-100)
+```
+
+### GET /api/scraping/events
+Provides scraping status in form of SSE events (while the scraping process is running).
+
+Returns a percentage number.
+
+### POST /api/scraping
+Initiates the scraping process.
+
+Returns no data.
+
+### DELETE /api/scraping
+Stops the scraping process.
+
+Returns no data.
 
 ## User interface
+Implemented as standard React application. Uses Context API for state management. Uses Boostrasp CSS.
 
 ## Testing
+Uses Mocha/Chai for service tests and JEST/Jasmine for FE tests.
 
+Example of successfully executed tests:
+```
+TBD
+```
 
 ## Deployment 
 To start the project, run `docker-compose up`, note the following options:
