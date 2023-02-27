@@ -172,3 +172,4 @@ luxonis-test-app | 2023-02-27T02:12:56.665Z [INFO] Server is running at http://l
 - caching - there is no server cache used ATM, a simple solution like [node-cache](https://github.com/node-cache/node-cache) or [route-cache](https://github.com/bradoyler/route-cache) may be used, the cache must be properly invalidated at the end of a (re)scraping process
 - scraping options UI - there are certain options avaiable on the API (dataset size and delay between estate service requests), this is not avbailable for end users and it may help when experiencing difficulties due to estate service throttling
 - mobile interface - only basic layout is implemented (tested on iPhone SE), may be improved by reducing some of the visual elements (white wrapper)
+- FE tests
