@@ -30,7 +30,7 @@ const initialContext: DataContextType = {
   stopScraping: () => Promise.resolve()
 }
 const DataContext = createContext<DataContextType>(initialContext);
-const SERVICE_URL = process.env.REACT_APP_SERVICE_URL;
+const SERVICE_URL = process.env.REACT_APP_SERVICE_URL || '';
 
 let eventSource = undefined;
 
