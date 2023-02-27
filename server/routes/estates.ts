@@ -8,7 +8,7 @@ const DEFAULT_DELAY = 500
 const DEFAULT_OFFSET = 0
 const DEFAULT_LIMIT = 10
 
-let currentStatus = { running: false }
+let currentStatus = { running: false, progress: 0 }
 
 const scrapingEvents: Array<number> = [];
 
