@@ -16,9 +16,7 @@ dotenv.config();
 
 export const DI = {} as {
   server: http.Server;
-  orm: MikroORM,
-  em: EntityManager,
-  estateRepository: EntityRepository<Estate>
+  orm: MikroORM
 };
     
 const app = express();

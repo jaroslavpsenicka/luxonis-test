@@ -57,7 +57,24 @@ Uses Mocha/Chai for service tests and JEST/Jasmine for FE tests.
 
 Example of successfully executed tests:
 ```
-TBD
+~/Projects/luxonis-test $ yarn test
+yarn run v1.22.4
+$ tsc && mocha dist/**/*.spec.js --exit
+
+
+  Estates
+    ✔ should return estates
+2023-02-27T14:42:20.929Z [INFO] ORM initialized
+2023-02-27T14:42:20.930Z [INFO] Server is running at http://localhost:3000
+    ✔ should start scraping with defaults
+    ✔ should start scraping with count param
+    ✔ should start scraping with delay param
+    ✔ should not stop scraping when not running
+
+
+  5 passing (658ms)
+
+✨  Done in 6.92s.
 ```
 
 ## Deployment 
