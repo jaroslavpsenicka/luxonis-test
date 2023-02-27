@@ -5,8 +5,8 @@ import compression from 'compression';
 import cors from 'cors';
 import path from 'path';
 import http from 'http';
-import { EntityManager, EntityRepository, MikroORM, RequestContext } from '@mikro-orm/core';
-import cache from "express-aggressive-cache";
+import { EntityRepository, MikroORM, RequestContext } from '@mikro-orm/core';
+import { EntityManager, PostgreSqlDriver } from '@mikro-orm/postgresql';
 
 import routes from './routes';
 import { logger } from './utils';
@@ -28,18 +28,15 @@ app.use(express.static(path.join(__dirname, './web')));
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cache({ maxAge: 3600 }).middleware);
 app.use((req, res, next) => RequestContext.create(DI.orm.em, next));
 
 app.use(routes);
 
 app.use(( err: Error, req: Request, res: Response, next: NextFunction ) => res.status(500).json({ error: err.message }));
 
-MikroORM.init().then(orm => {
+MikroORM.init<PostgreSqlDriver>().then(orm => {
   logger.info("ORM initialized");
   DI.orm = orm;
-  DI.em = DI.orm.em;
-  DI.estateRepository = DI.orm.em.getRepository(Estate);
   app.listen(process.env.PORT, () => logger.info(`Server is running at http://localhost:${process.env.PORT}`));
 })
 

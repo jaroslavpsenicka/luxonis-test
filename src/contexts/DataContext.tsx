@@ -5,6 +5,9 @@ import { Estate, Loadable } from '../types'
 
 interface DataContextType {
   estates: Loadable<Estate>
+  estatePageSize: number 
+  estatePage: number
+  setEstatePage: () => void
   scraping: ScrapingType
   startScraping: () => Promise<void>
   stopScraping: () => Promise<void>
@@ -19,6 +22,9 @@ interface ScrapingType {
 const loadableEstates: Loadable<Estate> = { loading: true }
 const initialContext: DataContextType = {
   estates: loadableEstates,
+  estatePageSize: 0, 
+  estatePage: 0,
+  setEstatePage: () => {},
   scraping: { running: false },
   startScraping: () => Promise.resolve(),
   stopScraping: () => Promise.resolve()
@@ -31,9 +37,12 @@ let eventSource = undefined;
 function DataProvider({ children }: any) {
 
   const [ estates, setEstates ] = useState<Loadable<Estate>>({ loading: true })
+  const [ estatePage, setEstatePage ] = useState<number>(0)
   const [ scraping, setScraping ] = useState<ScrapingType>({ running: false })
 
-  useEffect(() => loadEstates(), [])
+  const estatePageSize = 20;
+
+  useEffect(() => loadEstates(), [estatePage])
 
   useEffect(() => {
     if (scraping.running && scraping.progress >= 100) {
@@ -44,14 +53,14 @@ function DataProvider({ children }: any) {
 
   const loadEstates = () => {
     setEstates(() => ({ loading: true }))
-    Axios.get(`${SERVICE_URL}/api/estates`)
+    Axios.get(`${SERVICE_URL}/api/estates`, { params: { offset: estatePage * estatePageSize, limit: estatePageSize }} )
       .then(response => setEstates({ loading: false, data: response.data }))
       .catch(err => setEstates({ loading: false, error: err }))
   }
 
   const watchScraping = () => {
     eventSource = new EventSource(`${SERVICE_URL}/api/scraping`);
-    eventSource.addEventListener('scraping-progress', (event) => setScraping({ running: parseInt(event.data) < 100, progress: parseInt(event.data)}));
+    eventSource.addEventListener('scraping-progress', (event) => setScraping({ running: true, progress: parseInt(event.data)}));
     eventSource.addEventListener('error', (err) => setScraping({ running: false, error: err }));
   }
 
@@ -67,6 +76,9 @@ function DataProvider({ children }: any) {
   return (
     <DataContext.Provider value={{
       estates,
+      estatePageSize,
+      estatePage,
+      setEstatePage,
       scraping,
       startScraping,
       stopScraping

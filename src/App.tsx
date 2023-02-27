@@ -26,7 +26,6 @@ export default function App() {
             <Route path="/404" exact component={NoPage} />
             <Redirect to="/404" />
           </Switch>
-          <Footer />
         </BrowserRouter>
       </Suspense>
     </DataProvider>

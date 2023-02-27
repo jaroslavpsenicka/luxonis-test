@@ -5,32 +5,23 @@ import { logger } from '../utils';
 
 const DEFAULT_COUNT = 500
 const DEFAULT_DELAY = 500
+const DEFAULT_OFFSET = 0
+const DEFAULT_LIMIT = 10
 
 const scrapingEvents: Array<number> = [];
 
-export const searchEstates: RequestHandler = (req, res) => findEstates().then(estates => res.status(200).json(estates));
-
-// export const startScraping: RequestHandler = async (req, res) => {
-//   const countParam = parseInt(req.query.c as string)
-//   const delayParam = parseInt(req.query.d as string)
-//   const progressFn = (currentCycle: number, cycleCount: number) => {
-//     console.log(`cycle ${currentCycle+1} of ${cycleCount}`)
-//     return true;
-//   }
-
-//   try {
-//     const recordCount = !isNaN(countParam) ? countParam : DEFAULT_COUNT
-//     const scrapeDelay = !isNaN(delayParam) ? delayParam : DEFAULT_DELAY
-//     start(recordCount, scrapeDelay, progressFn)    
-//     res.status(201).send();
-//   } catch (err) {
-//     logger.error("cannot start scraping,", err)
-//     res.status(400).send({ error: (err instanceof Error) ? err.message : err?.toString() });
-//   }
-// };
+export const searchEstates: RequestHandler = (req, res) => {
+  const offsetParam = parseInt(req.query.offset as string)
+  const limitParam = parseInt(req.query.limit as string)
+  findEstates(offsetParam || DEFAULT_OFFSET, limitParam || DEFAULT_LIMIT)
+    .then(estates => res.status(200).json(estates));
+}
 
 export const startScraping: RequestHandler = (req, res) => {
-  start(500, 1000, (currentCycle: number, cycleCount: number) => scrapingEvents.push(Math.floor((currentCycle+1)/cycleCount*100)));
+  const countParam = parseInt(req.query.count as string)
+  const delayParam = parseInt(req.query.delay as string)
+  const onChange = (currentCycle: number, cycleCount: number) => scrapingEvents.push(Math.floor((currentCycle+1)/cycleCount*100))
+  start(countParam || DEFAULT_COUNT, delayParam || DEFAULT_DELAY, onChange, () => {});
   res.status(201).send();
 };
 

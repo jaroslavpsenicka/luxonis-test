@@ -1,8 +1,14 @@
-import { EntityManager, EntityRepository, MikroORM, RequestContext } from '@mikro-orm/core';
-
 import { DI } from '../server';
 import { Estate } from '../entities';
 
-export const findEstates = (): Promise<Array<Estate>> => {
-  return DI.estateRepository.findAll({})
+interface EntitiesWithMetadata<T> {
+  entities: Array<T>,
+  count: number
+  offset: number
+  limit: number
+}
+
+export const findEstates = (offset: number, limit: number): Promise<EntitiesWithMetadata<Estate>> => {
+  return DI.orm.em.findAndCount(Estate, {}, { offset, limit })
+    .then(([ entities, count]) => ({ entities, count, offset, limit} as EntitiesWithMetadata<Estate>))
 }

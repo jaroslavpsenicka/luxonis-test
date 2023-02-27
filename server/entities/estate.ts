@@ -3,8 +3,8 @@ import { PrimaryKey, Entity, Property } from '@mikro-orm/core';
 @Entity()
 export class Estate {
 
-  @PrimaryKey()
-  id: number;
+  @PrimaryKey({ hidden: true })
+  id!: number;
 
   @Property()
   name: string;
@@ -15,8 +15,7 @@ export class Estate {
   @Property()
   createdAt = new Date();
 
-  constructor(id: number, name: string, image: string) {
-    this.id = id;
+  constructor(name: string, image: string) {
     this.name = name;
     this.image = image;
   }
