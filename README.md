@@ -2,7 +2,8 @@ This is Luxonis TEST project.
 
 ## Service implementation
 Implemented as standard Express application.
-There are following endpoints exposed. All endpoints uses standard HTTP statuses.
+
+There are following endpoints exposed. All endpoints use standard HTTP status codes.
 
 ### GET /api/estates
 Provides estates data.
